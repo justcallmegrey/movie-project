@@ -9,3 +9,7 @@
     width: 100%;
     height: 100vh;
 }
+
+.carousel-home {
+    margin-top: -24px;
+}

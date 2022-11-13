@@ -16,5 +16,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/movie', 'MovieController@index')->name('movie');
+Route::get('/movie/datatable', 'MovieController@datatable')->name('movie.datatable');
+Route::post('/movie/store', 'MovieController@store')->name('movie.store');
