@@ -13,3 +13,21 @@
 .carousel-home {
     margin-top: -24px;
 }
+
+.small-icon{
+    width: 15px;
+}
+
+.btn-primary-custom {
+    background-color: #DA0037;
+    color: #fff !important;
+}
+
+.btn-primary-custom:hover {
+    background-color: #DA0037;
+}
+
+.btn-danger-custom {
+  background-color: #444444;
+  color: #fff !important;
+}
