@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Movie;
+use App\Models\Member;
 
-class MovieController extends Controller
+class MemberController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,12 +14,12 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return view('movies.index');
+        return view('members.index');
     }
 
     public function datatable()
     {
-        $data = Movie::select();
+        $data = Member::select();
 
         return \DataTables::of($data)
             ->addColumn('action', function ($data, $action = null) {
@@ -27,7 +27,7 @@ class MovieController extends Controller
                 if ($data->is_rented == false) {
                     $action .= '<button class="btn-action btn-modal-edit btn btn-primary-custom btn-sm"'
                     . ' data-type="edit"'
-                    . ' data-href="'.route('movie.edit', $data->id).'"'
+                    . ' data-href="'.route('member.edit', $data->id).'"'
                     . ' >'
                     . ' <img class="small-icon" src="'. asset('img/write.svg') .'" />'
                     . ' </button>';
@@ -35,7 +35,7 @@ class MovieController extends Controller
                 if ($data->is_rented == false) {
                     $action .= '<button class="btn-action btn-modal-delete btn btn-danger-custom ml-2 btn-sm"'
                     . ' data-type="delete"'
-                    . ' data-href="'.route('movie.delete', $data->id).'"'
+                    . ' data-href="'.route('member.delete', $data->id).'"'
                     . ' >'
                     . ' <img class="small-icon" src="'. asset('img/delete.svg') .'" />'
                     . ' </button>';
@@ -62,21 +62,28 @@ class MovieController extends Controller
     {
         try {
             \DB::beginTransaction();
-                $requests = $request->only('title', 'genre', 'released_date');
-                $requests['is_rented'] = false;
+                $requests = $request->only([
+                    'name',
+                    'age',
+                    'address',
+                    'telephone',
+                    'identity_number',
+                    'date_of_joined',
+                    'is_active',
+                ]);
 
-                $created = Movie::create($requests);
+                $created = Member::create($requests);
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Movie successfully created'
+                'message' => 'Member successfully created'
             ], 200);
         } catch (\Exception $e) {
             \DB::rollback();
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create movie'
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -101,7 +108,7 @@ class MovieController extends Controller
     public function edit($id)
     {
         try {
-            $data = Movie::findOrFail($id);
+            $data = Member::findOrFail($id);
 
             return response()->json([
                 'success' => true,
@@ -127,23 +134,32 @@ class MovieController extends Controller
         try {
             \DB::beginTransaction();
 
-            $requests = $request->only('title', 'genre', 'released_date');
+            $requests = $request->only([
+                'name',
+                'age',
+                'address',
+                'telephone',
+                'identity_number',
+                'date_of_joined',
+                'is_active',
+            ]);
 
-            $data = Movie::findOrFail($id);
+            $data = Member::findOrFail($id);
             $data->update($requests);
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Movie successfully updated'
+                'message' => 'Member successfully updated'
             ], 200);
         } catch (\Exception $e) {
             \DB::rollback();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Failed to update movie'
+                // 'message' => 'Failed to update member'
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -159,21 +175,21 @@ class MovieController extends Controller
         try {
             \DB::beginTransaction();
 
-            $data = Movie::findOrFail($id);
+            $data = Member::findOrFail($id);
             $data->delete();
 
             \DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Movie successfully deleted'
+                'message' => 'Member successfully deleted'
             ], 200);
         } catch (\Exception $e) {
             \DB::rollback();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Failed to delete movie'
+                'message' => 'Failed to delete member'
             ], 400);
         }
     }
